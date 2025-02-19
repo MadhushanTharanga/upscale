@@ -38,12 +38,15 @@ public class CustomerController {
         );
     }
     @GetMapping
-    public String getAll(
+    public ResponseEntity<StandardResponse> getAll(
             @RequestParam String searchText,
             @RequestParam int page,
             @RequestParam int size
     ){
-        return "getAll()";
+        return new ResponseEntity<>(
+                new StandardResponse(201,"customer list!..",customerService.findAll(searchText,page,size)),
+                HttpStatus.CREATED
+        );
     }
     @DeleteMapping("/{id}")
     public String delete(@PathVariable String id){

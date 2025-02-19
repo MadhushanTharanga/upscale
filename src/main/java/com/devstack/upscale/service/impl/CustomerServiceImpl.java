@@ -2,10 +2,13 @@ package com.devstack.upscale.service.impl;
 
 import com.devstack.upscale.dto.request.RequestCustomerDto;
 import com.devstack.upscale.dto.response.ResponseCustomerDto;
+import com.devstack.upscale.dto.response.paginate.CustomerPaginateDto;
 import com.devstack.upscale.entity.Customer;
 import com.devstack.upscale.repo.CustomerRepo;
 import com.devstack.upscale.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -50,6 +53,16 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setEmail(dto.getEmail());
         customer.setActive(dto.isActive());
         customerRepo.save(customer);
+    }
+
+    @Override
+    public CustomerPaginateDto findAll(String searchText, int page, int size) {
+        return CustomerPaginateDto.builder()
+                .dataList(customerRepo.findAllWithSearchText(searchText, PageRequest.of(page, size)).stream().map(this::toResponseCustomer).toList())
+                .count(
+                        customerRepo.countAllWithSearchText(searchText)
+                )
+                .build();
     }
 
     private ResponseCustomerDto toResponseCustomer(Customer customer){

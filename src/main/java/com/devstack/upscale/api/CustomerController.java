@@ -21,9 +21,21 @@ public class CustomerController {
                 HttpStatus.CREATED
         );
     }
-    @PutMapping
-    public String update(@RequestBody RequestCustomerDto dto){
-        return "update()";
+    @GetMapping("/{id}")
+    public ResponseEntity<StandardResponse> getById(@PathVariable String id){
+        return new ResponseEntity<>(
+                new StandardResponse(200,"customer data!",customerService.findById(id)),
+                HttpStatus.OK
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<StandardResponse> update(@PathVariable String id, @RequestBody RequestCustomerDto dto){
+        customerService.update(id,dto);
+        return new ResponseEntity<>(
+                new StandardResponse(201,"customer was Updated!",null),
+                HttpStatus.CREATED
+        );
     }
     @GetMapping
     public String getAll(
@@ -32,10 +44,6 @@ public class CustomerController {
             @RequestParam int size
     ){
         return "getAll()";
-    }
-    @GetMapping("/{id}")
-    public String getById(@PathVariable String id){
-        return "getById()";
     }
     @DeleteMapping("/{id}")
     public String delete(@PathVariable String id){

@@ -2,7 +2,10 @@ package com.devstack.upscale.api;
 
 import com.devstack.upscale.dto.request.RequestCustomerDto;
 import com.devstack.upscale.service.CustomerService;
+import com.devstack.upscale.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
     private final CustomerService customerService;
     @PostMapping
-    public String create(@RequestBody RequestCustomerDto dto){
-        System.out.println(dto);
-//        customerService.create(dto);
-        return "success!";
+    public ResponseEntity<StandardResponse> create(@RequestBody RequestCustomerDto dto){
+        customerService.create(dto);
+        return new ResponseEntity<>(
+                new StandardResponse(201,"customer Create!",null),
+                HttpStatus.CREATED
+        );
     }
     @PutMapping
     public String update(@RequestBody RequestCustomerDto dto){
